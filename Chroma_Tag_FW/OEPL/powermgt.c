@@ -136,6 +136,8 @@ void doSleep(uint32_t __xdata t)
 
 // sleepy time
    sleepForMsec(t);
+	MAIN_LOG("WOREVT 0x%x%02x\n",WOREVT1,WOREVT0);
+
    powerUp(INIT_BASE);
 #if defined(DEBUG_MAX_SLEEP) | defined(DEBUG_SLEEP)
    LOG("Awake\n");
@@ -181,6 +183,7 @@ uint16_t getNextSleep()
    if(avg < tagSettings.minimumCheckInTime) {
       return tagSettings.minimumCheckInTime;
    }
+   LOGA("getNextSleep avg %u\n",avg);
    return avg;
 }
 

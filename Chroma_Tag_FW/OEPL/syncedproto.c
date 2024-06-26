@@ -240,7 +240,7 @@ struct AvailDataInfo *__xdata getAvailDataInfo()
                   xMemCopyShort(APmac, (void *)f->src, 8);
                   APsrcPan = f->pan;
                   dataReqLastAttempt = c;
-                  PROTO_LOG("Got AvlData\n");
+                  LOGA("Got AvlData on try %d\n",c+1);
                   return(struct AvailDataInfo *)(inBuffer + sizeof(struct MacFrameNormal) + 1);
                }
             }
@@ -248,7 +248,7 @@ struct AvailDataInfo *__xdata getAvailDataInfo()
       }
    }
    dataReqLastAttempt = DATA_REQ_MAX_ATTEMPTS;
-   PROTO_LOG("Full AvlData failed\n");
+   LOGA("Full AvlData failed\n");
    return NULL;
 }
 
@@ -273,13 +273,14 @@ struct AvailDataInfo *__xdata getShortAvailDataInfo()
                   xMemCopyShort(APmac, (void *)f->src, 8);
                   APsrcPan = f->pan;
                   dataReqLastAttempt = c;
+                  LOGA("Got ShortAvlData on try %d\n",c+1);
                   return(struct AvailDataInfo *)(inBuffer + sizeof(struct MacFrameNormal) + 1);
                }
             }
          }
       }
    }
-   PROTO_LOG("AvlData failed\n");
+   LOGA("ShortAvlData failed\n");
    dataReqLastAttempt = DATA_REQ_MAX_ATTEMPTS;
    return NULL;
 }
@@ -1071,6 +1072,8 @@ bool processAvailDataInfo(struct AvailDataInfo *__xdata avail)
                wakeUpReason = WAKEUP_REASON_FAILED_OTA_FW;
                showFailedUpdate();
                xMemSet(curDispDataVer,0x00,8);
+            // Give the user time to read the error message
+               doSleep(10000UL);
             }
          }
          else {

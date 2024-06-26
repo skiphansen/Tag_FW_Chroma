@@ -144,7 +144,14 @@ void TagAssociated()
    }
    else {
    // got some data from the AP!
-      nextCheckInFromAP = avail->nextCheckIn;
+		nextCheckInFromAP = avail->nextCheckIn;
+		LOG("AP returned nextCheckInFromAP %d\n",nextCheckInFromAP);
+#if 0
+		if(nextCheckInFromAP == 0) {
+			nextCheckInFromAP = 61;
+			longDataReqCounter = nextCheckInFromAP * 60;
+		}
+#endif
       if(avail->dataType != DATATYPE_NOUPDATE) {
       // data transfer
          BLOCK_LOG("Update available\n");
@@ -160,6 +167,7 @@ void TagAssociated()
       else {
       // no data transfer, just sleep.
          LOGA("No update\n");
+			DumpHex((const uint8_t *__xdata) avail,sizeof(*avail));
       }
    }
 
@@ -183,6 +191,8 @@ void TagAssociated()
    else {
       if(nextCheckInFromAP) {
       // if the AP told us to sleep for a specific period, do so.
+         LOGA("nextCheckInFromAP %u\n",nextCheckInFromAP);
+
          if(nextCheckInFromAP & 0x8000) {
             doSleep((nextCheckInFromAP & 0x7FFF) * 1000UL);
          }
