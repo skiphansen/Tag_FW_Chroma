@@ -94,6 +94,7 @@ void PortInit(void);
 //late, after eeprom
 void InitBcastFrame(void);
 void UpdateBcastFrame(void);
+extern void ResetFactoryNVRAM(void);
 
 //some sanity checks
 #include "eeprom.h"
