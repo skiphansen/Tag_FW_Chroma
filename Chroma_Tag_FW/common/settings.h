@@ -4,6 +4,7 @@
 #include <stdint.h>
 
 #define FW_VERSION 0x0008        // version number
+#define RELEASE_BUILD            // include gDefaultEEPROM support
 // #define FW_VERSION_SUFFIX "-BETA" // suffix, like -RC1 or whatever.
 // #define BAUD_115200              // Defaults to 1 megabaud this is not defined
 // #define DEBUGBLOCKS              // uncomment to enable extra debug information on the block transfers
@@ -17,7 +18,7 @@
 // #define DEBUGGUI                 // debug GUI drawing (enabled)
 // #define DEBUGSETTINGS            // debug settings module (preferences/eeprom)
 // #define DEBUGEEPROM              // eeprom-related debug messages
-#define DEBUG_NV_DATA            // debug eeprom-related data accesses
+// #define DEBUG_NV_DATA            // debug eeprom-related data accesses
 // #define DEBUG_SLEEP              // debug sleeping
 //#define DEBUG_RX_DATA            // display subgig rx packets
 //#define DEBUG_TX_DATA            // display subgig tx packets

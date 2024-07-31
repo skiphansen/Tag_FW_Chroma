@@ -354,7 +354,6 @@ void main()
         ", compiled " __DATE__" " __TIME__ "\n",gBoardName,fwVersion);
 
    boardInitStage2();
-   LOG("boardInitStage2 returned\n");
 
    UpdateVBatt();
 // Log initial battery voltage and temperature

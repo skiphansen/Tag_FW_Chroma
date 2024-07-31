@@ -62,6 +62,7 @@ void boardInitStage2(void)
    }
 #endif
    LoadGlobalsFromEEPROM();
+#ifdef RELEASE_BUILD
    if(gEEpromFailure) {
    // Not good!  Try to set defaults so we can communicate
       LOG("First call to LoadGlobalsFromEEPROM failed\n");
@@ -72,6 +73,7 @@ void boardInitStage2(void)
          LOG("Second call to LoadGlobalsFromEEPROM failed\n");
       }
    }
+#endif
 
    powerDown(INIT_EEPROM);
 // On some board (Chroma29 for example) we don't know how to deal
@@ -86,7 +88,6 @@ void LoadGlobalsFromEEPROM()
 // Set mSelfMac from the device SN stored in the factory "NVRAM".
 // Note: apparently some boards have a 6 character SN and some have a 7.
 // Only the first 6 charcters are used.
-   xMemSet(gTempBuf320,0x00,7);
    
    gEEpromFailure = true;  // Assume the worse !
       
@@ -96,6 +97,19 @@ void LoadGlobalsFromEEPROM()
       NV_DATA_LOG("failed to get SN\n");
       return;
    }
+// Got the SN
+#ifdef RELEASE_BUILD
+   xMemSet(&gTempBuf320[16],0x00,4);
+   if(xMemEqual(&gTempBuf320[2],&gTempBuf320[16],4)) {
+   // SN is the default SN
+      NV_DATA_LOG("SN is default\n");
+      if(!xMemEqual((const void __xdata*) &gDefaultEEPROM[8],&gTempBuf320[16],4)) {
+      // The default SN has been patched in flash, reset NVRAM to update SN
+         NV_DATA_LOG("gDefaultEEPROM updated\n");
+         return;
+      }
+   }
+#endif
 
    mSelfMac[7] = 0x44;
    mSelfMac[6] = 0x67;

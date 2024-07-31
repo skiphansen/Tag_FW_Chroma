@@ -1,17 +1,21 @@
 #include <stdint.h>
 #include "board.h"
+#include "settings.h"
 
+#ifdef RELEASE_BUILD
 // Default to JA00000000 if we can't get SN from Factory EEPROM
 const uint8_t __code gDefaultEEPROM[] = {
    0x56, 0x12, 0x09, 0x85, // magic number
-   0x01,8,'J','A',0,0,0,0, // SN = JA00000000
-// Chroma29s don't VCOM in EEPROM, but the code was sending 
-// CMD_VCOM_DC_SETTING 0x28
-   0x23,3,0x28,            
+   0x01,8,'J','A',0,0,0,0, // SN = JA00000000  NB: don't move
    0x09,4,0xec,0x02, // ADC intercept
    0x12,4,0x5a,0x0a, // ADC slope
 // 0xff        // end of settings (erased EEPROM)
 };
+
+// Save pointer to SN @ end of the image to make it easier for
+// host tools to find the SN for patching
+__code  uint16_t __at (0x7ffe) gSnPtr = (uint16_t) &gDefaultEEPROM[6];
+#endif
 
 #include "../boardChroma.c"
 
