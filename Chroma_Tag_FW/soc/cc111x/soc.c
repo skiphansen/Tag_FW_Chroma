@@ -65,12 +65,12 @@ void boardInitStage2(void)
 #ifdef RELEASE_BUILD
    if(gEEpromFailure) {
    // Not good!  Try to set defaults so we can communicate
-      LOG("First call to LoadGlobalsFromEEPROM failed\n");
+      NV_DATA_LOG("First call to LoadGlobalsFromEEPROM failed\n");
       ResetFactoryNVRAM();
    // Try to load globals again
       LoadGlobalsFromEEPROM();
       if(gEEpromFailure) {
-         LOG("Second call to LoadGlobalsFromEEPROM failed\n");
+         NV_DATA_LOG("Second call to LoadGlobalsFromEEPROM failed\n");
       }
    }
 #endif

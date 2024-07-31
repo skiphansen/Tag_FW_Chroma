@@ -3,10 +3,10 @@
 
 #include <stdint.h>
 
-#define FW_VERSION 0x0008        // version number
+#define FW_VERSION 0x0009        // version numbers
 #define RELEASE_BUILD            // include gDefaultEEPROM support
 // #define FW_VERSION_SUFFIX "-BETA" // suffix, like -RC1 or whatever.
-// #define BAUD_115200              // Defaults to 1 megabaud this is not defined
+#define BAUD_115200              // Defaults to 1 megabaud this is not defined
 // #define DEBUGBLOCKS              // uncomment to enable extra debug information on the block transfers
 // #define FORCE_IMG_DL             // force tag to re-download every upload
 // #define DEBUGPROTO               // debug protocol
