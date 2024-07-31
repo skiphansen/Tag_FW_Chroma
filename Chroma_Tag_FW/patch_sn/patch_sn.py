@@ -1,4 +1,5 @@
 import argparse
+import zlib
 
 class SnException(Exception):
     pass
@@ -11,21 +12,43 @@ def patch_sn(file_path, sn):
             #    mac_bytes[:0] = bytearray(b'\x00')
             #mac_bytes.reverse()  # Reverse the byte order
 
-            file.seek(0x7ffe)
-            offset = file.read(2)
-            SnOffset = (offset[1] << 8) + offset[0]
-            file.seek(SnOffset)
-            bin = file.read(2)
-            tag_type = bin.decode("utf-8")
-            if sn[0:2] != tag_type[0:2]:
+            ota_offset = 0
+            #file.seek(9)
+            bin = bytearray(file.read())
+            if len(bin) == 32768:
+                print("Patching full binary file")
+                pass
+
+            else:
+                tag_type = bin[9:15].decode("utf-8")
+                if tag_type == 'chroma':
+                    # ota file
+                    if bin[8] == 1:
+                        print("Patching ota file")
+                        ota_offset = 25
+                    else:
+                        print(f'Header version {bin[8]} is not supported')
+                        raise SnException()
+                else:
+                    print(f'File not recognized as full binary or ota file')
+                    raise SnException()
+
+            SnOffset = (bin[32767 + ota_offset] << 8) + bin[32766 + ota_offset]
+            SnOffset += ota_offset
+            tag_type = bin[SnOffset:SnOffset+2].decode("utf-8")
+            if sn[0:2] != tag_type:
                 print(f'Invalid SN, first two letters much be "{tag_type}" for this tag type')
                 raise SnException()
-            bin = file.read(4)
             new_sn = bytes.fromhex(sn[2:10])
+            print(f'SN changed from {tag_type}{bin[SnOffset+2:SnOffset+6].hex()} to {sn}')
             file.seek(SnOffset+2)
             file.write(new_sn)
+            if ota_offset != 0:
+                bin[SnOffset+2:SnOffset+6] = new_sn
+                crc = zlib.crc32(bin[ota_offset:])
+                file.seek(0)
+                file.write(crc.to_bytes(4,'little'))
             file.close()
-            print(f'SN changed from {tag_type[0:2]}{bin.hex()} to {sn}')
 
     except FileNotFoundError:
         print("Error: File not found.")
