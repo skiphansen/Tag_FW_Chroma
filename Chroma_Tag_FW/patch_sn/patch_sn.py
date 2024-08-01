@@ -1,54 +1,75 @@
+import os
 import argparse
 import zlib
+from intelhex import IntelHex
 
 class SnException(Exception):
     pass
 
 def patch_sn(file_path, sn):
+    hex_file = False
+    binary_file = False
+    ota_file = False
+    ota_offset = 0
+
     try:
-        with open(file_path, "r+b") as file:
-            #mac_bytes = bytearray.fromhex(mac.replace(':', ''))
-            #while len(mac_bytes) < 8:
-            #    mac_bytes[:0] = bytearray(b'\x00')
-            #mac_bytes.reverse()  # Reverse the byte order
-
-            ota_offset = 0
-            #file.seek(9)
-            bin = bytearray(file.read())
-            if len(bin) == 32768:
-                print("Patching full binary file")
-                pass
-
-            else:
-                tag_type = bin[9:15].decode("utf-8")
-                if tag_type == 'chroma':
-                    # ota file
-                    if bin[8] == 1:
-                        print("Patching ota file")
-                        ota_offset = 25
-                    else:
-                        print(f'Header version {bin[8]} is not supported')
-                        raise SnException()
-                else:
-                    print(f'File not recognized as full binary or ota file')
-                    raise SnException()
-
-            SnOffset = (bin[32767 + ota_offset] << 8) + bin[32766 + ota_offset]
-            SnOffset += ota_offset
-            tag_type = bin[SnOffset:SnOffset+2].decode("utf-8")
-            if sn[0:2] != tag_type:
-                print(f'Invalid SN, first two letters much be "{tag_type}" for this tag type')
+        if file_path.lower().endswith('.hex'):
+            print("Patching full hex file")
+            hex_file = True
+            ih = IntelHex(file_path)
+            bin = bytearray(ih.tobinarray())
+        else:
+            file_size = os.path.getsize(file_path)
+            if file_size < 32768 or file_size > 32768 + 256:
                 raise SnException()
-            new_sn = bytes.fromhex(sn[2:10])
-            print(f'SN changed from {tag_type}{bin[SnOffset+2:SnOffset+6].hex()} to {sn}')
-            file.seek(SnOffset+2)
-            file.write(new_sn)
-            if ota_offset != 0:
-                bin[SnOffset+2:SnOffset+6] = new_sn
+
+            with open(file_path, "rb") as file:
+                bin = bytearray(file.read())
+                if file_size == 32768:
+                    print("Patching full binary file")
+                    binary_file = True
+                    pass
+                else:
+                    tag_type = bin[9:15].decode("utf-8")
+                    if tag_type == 'chroma':
+                        # ota file
+                        if bin[8] == 1:
+                            print("Patching ota file")
+                            ota_offset = 25
+                            ota_file = True
+                        else:
+                            print(f'Header version {bin[8]} is not supported')
+                            raise SnException()
+
+        SnOffset = (bin[32767 + ota_offset] << 8) + bin[32766 + ota_offset]
+        SnOffset += ota_offset
+        MagicOffset = SnOffset - 6
+        NvMagic = bytearray([0x56, 0x12, 0x09, 0x85])
+        if bin[MagicOffset:MagicOffset+4] != NvMagic:
+            print(f'NVRAM magic not found')
+            binary_file = False
+            ota_file = False
+            raise SnException()
+
+        tag_type = bin[SnOffset:SnOffset+2].decode("utf-8")
+        if sn[0:2] != tag_type:
+            print(f'Invalid SN, first two letters much be "{tag_type}" for this tag type')
+            raise SnException()
+        new_sn = bytes.fromhex(sn[2:10])
+        print(f'SN changed from {tag_type}{bin[SnOffset+2:SnOffset+6].hex()} to {sn}')
+        bin[SnOffset+2:SnOffset+6] = new_sn
+        if hex_file:
+            ih = IntelHex()
+            ih.frombytes(bin)
+            ih.write_hex_file(file_path)
+        else:
+            with open(file_path, "r+b") as file:
+                file.seek(SnOffset+2)
+                file.write(new_sn)
                 crc = zlib.crc32(bin[ota_offset:])
                 file.seek(0)
                 file.write(crc.to_bytes(4,'little'))
-            file.close()
+                file.close()
 
     except FileNotFoundError:
         print("Error: File not found.")
