@@ -172,15 +172,19 @@ void addAverageValue()
 uint16_t getNextSleep() 
 {
    uint16_t avg = 0;
+
+   LOGA("getNextSleep: ");
    for(uint8_t c = 0; c < POWER_SAVING_SMOOTHING; c++) {
       avg += dataReqAttemptArr[c];
    }
    avg /= POWER_SAVING_SMOOTHING;
+   LOGA("%u",avg);
 
 // check if we should sleep longer due to an override in the config
    if(avg < tagSettings.minimumCheckInTime) {
       return tagSettings.minimumCheckInTime;
    }
+   LOGA(" %u\n",avg);
    return avg;
 }
 

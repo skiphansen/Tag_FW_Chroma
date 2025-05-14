@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-// #define RELEASE_BUILD            // include gDefaultEEPROM support
+#define RELEASE_BUILD            // include gDefaultEEPROM support
 #define FW_VERSION 0x0013        // version number
 
 #define SFDP_DISABLED         // Disable SFDP to save 1538 bytes.
@@ -11,7 +11,7 @@
 #ifdef RELEASE_BUILD
    #define DEBUGMAIN                // parts in the main loop
    #define BAUD_115200              // Defaults to 1 megabaud this is not defined
-// #define FW_VERSION_SUFFIX "-BETA" // suffix, like -RC1 or whatever.
+   #define FW_VERSION_SUFFIX "-DEBUG" // suffix, like -RC1 or whatever.
 #else
 // #define BAUD_115200              // Defaults to 1 megabaud this is not defined
 // #define DEBUGBLOCKS              // uncomment to enable extra debug information on the block transfers
@@ -35,10 +35,11 @@
 // #define DEBUG_CHIP_CFG   // log chip configuration
 #define DEBUG_SCREEN_INIT  // log chip initialization
 #define LEAN_VERSION // disable bitmaps to save code space
-#define PING_TEST    // Just ping AP once a second
+//#define PING_TEST    // Just ping AP once a second
 //#define TX_TEST         // Just send a test message once a second
+//#define SNIFFER_TEST    // Just dump received frames
 
-#if defined(PING_TEST) || defined(TX_TEST)
+#if defined(PING_TEST) || defined(TX_TEST) || defined(SNIFFER_TEST)
 #define RF_TEST         // Just send a test message once a second
 void RfTest();
 #endif

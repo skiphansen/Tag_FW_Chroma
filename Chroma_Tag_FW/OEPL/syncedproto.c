@@ -1262,3 +1262,22 @@ void RfTest()
 }
 #endif
 
+#ifdef SNIFFER_TEST
+// Just dump received frames
+void RfTest() 
+{
+   uint16_t __xdata TestCount = 0;
+   int8_t Len;
+
+   radioRxEnable(false);
+   radioSetChannel(203);   // 915.083 Mhz
+   radioRxFlush();
+   radioRxEnable(true);
+   while(true) {
+      if((Len = radioRx()) > 1) {
+         LOGA("Received %d byte frame:\n",Len);
+         DumpHex(inBuffer,Len);
+      }
+   }
+}
+#endif

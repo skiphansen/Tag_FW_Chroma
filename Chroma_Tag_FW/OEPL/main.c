@@ -161,6 +161,7 @@ void TagAssociated()
          LOGA("No update\n");
       }
    }
+   LOGA("nextCheckInFromAP %u\n",nextCheckInFromAP);
 
    uint16_t nextCheckin = getNextSleep();
    longDataReqCounter += nextCheckin;

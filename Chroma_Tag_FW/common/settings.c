@@ -158,9 +158,9 @@ void LogSettings()
    LOGA("  batLowVoltage %d\n",tagSettings.batLowVoltage);
    LOGA("  enableFastBoot %d\n",tagSettings.enableFastBoot);
    LOGA("  Last ch %d\n",gCurrentChannel);
+   LOGA("  min Check In Time %d\n",tagSettings.minimumCheckInTime);
 // The following are not that interesting
    SETTINGS_LOG("  customMode %d\n",tagSettings.customMode);
-   SETTINGS_LOG("  min Check In Time %d\n",tagSettings.minimumCheckInTime);
    SETTINGS_LOG("  gSubGhzBand %d\n",gSubGhzBand);
 }
 

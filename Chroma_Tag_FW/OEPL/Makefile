@@ -1,4 +1,4 @@
-BUILD ?= chroma42_8176
+BUILD ?= chroma29
 FLAGS += -DBUILD=$(BUILD)
 
 ifeq ($(BUILD),chroma74y)
