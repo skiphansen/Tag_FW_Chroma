@@ -159,6 +159,10 @@ void TagAssociated()
       else {
       // no data transfer, just sleep.
          LOGA("No update\n");
+         if(nextCheckInFromAP == 0) {
+            nextCheckInFromAP = 10;
+            LOGA("Forced nextCheckInFromAP to 10 minutes\n");
+         }
       }
    }
    LOGA("nextCheckInFromAP %u\n",nextCheckInFromAP);

@@ -11,7 +11,7 @@
 #ifdef RELEASE_BUILD
    #define DEBUGMAIN                // parts in the main loop
    #define BAUD_115200              // Defaults to 1 megabaud this is not defined
-   #define FW_VERSION_SUFFIX "-DEBUG" // suffix, like -RC1 or whatever.
+   #define FW_VERSION_SUFFIX "-DEBUG1" // suffix, like -RC1 or whatever.
 #else
 // #define BAUD_115200              // Defaults to 1 megabaud this is not defined
 // #define DEBUGBLOCKS              // uncomment to enable extra debug information on the block transfers
