@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#define RELEASE_BUILD            // include gDefaultEEPROM support
+// #define RELEASE_BUILD            // include gDefaultEEPROM support
 #define FW_VERSION 0x0015        // version number
 
 #define SFDP_DISABLED         // Disable SFDP to save 1538 bytes.
@@ -33,9 +33,9 @@
 // #define DEBUG_AP_SEARCH          // log ap search details
 // #define DEBUG_FORCE_OVERLAY      // force low bat and no AP icons to display
 // #define DEBUG_CHIP_CFG   // log chip configuration
-#define DEBUG_SCREEN_INIT  // log chip initialization
+// #define DEBUG_SCREEN_INIT  // log chip initialization
 #define LEAN_VERSION // disable bitmaps to save code space
-#define PING_TEST    // Just ping AP once a second
+// #define PING_TEST    // Just ping AP once a second
 //#define TX_TEST         // Just send a test message once a second
 
 #if defined(PING_TEST) || defined(TX_TEST)
@@ -46,8 +46,8 @@ void RfTest();
 #define DISABLE_BARCODES   // barcodes are optional
 // #define ISDEBUGBUILD          // disable clearing and resaving of settings on every reset
 
-// #define DISABLE_UI         // when you need to debug and are out of flash
-// #define DISABLE_DISPLAY    // don't actually update the display
+#define DISABLE_UI         // when you need to debug and are out of flash
+#define DISABLE_DISPLAY    // don't actually update the display
 
 #if defined(DEBUG_RX_DATA) || defined(DEBUG_TX_DATA)
 #define DEBUG_COMMS

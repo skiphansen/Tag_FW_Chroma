@@ -33,6 +33,7 @@ SOURCES += $(SOC_DIR)/wdt.c $(SOC_DIR)/timer.c $(SOC_DIR)/sleep.c
 SOURCES += $(SOC_DIR)/adc.c $(SOC_DIR)/radio.c
 SOURCES += $(SOC_DIR)/soc.c $(SOC_DIR)/printf.c
 SOURCES += board.c $(SCREEN_SRC)
+SOURCES += g5dec.c
 
 EEPROMDRV ?= eeprom.c
 SOURCES += $(EEPROMDRV)
