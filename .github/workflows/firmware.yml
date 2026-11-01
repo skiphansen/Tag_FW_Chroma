@@ -27,16 +27,16 @@ jobs:
           submodules: true
       - name: Install SDCC 4.6.0 and build tools
         run: |
-	  # Install bzip2 system dependency
-	  sudo apt-get update && sudo apt-get install -y bzip2
-	  
-	  # Pull package and extract into a dedicated directory
-	  mkdir -p $HOME/sdcc
-	  wget -O sdcc.tar.bz2 "https://sourceforge.net/projects/sdcc/files/sdcc-linux-amd64/4.6.0/sdcc-4.6.0-amd64-unknown-linux2.5.tar.bz2/download"
-	  tar -xjf sdcc.tar.bz2 --strip-components=1 -C $HOME/sdcc
-	  
-	  # Inject the new binaries directly into the GitHub Runner environment PATH
-	  echo "$HOME/sdcc/bin" >> $GITHUB_PATH      - run: make -C Chroma_Tag_FW/OEPL BUILD=${{ matrix.build }}
+          # Install bzip2 system dependency
+          sudo apt-get update && sudo apt-get install -y bzip2
+          
+          # Pull package and extract into a dedicated directory
+          mkdir -p $HOME/sdcc
+          wget -O sdcc.tar.bz2 "https://sourceforge.net/projects/sdcc/files/sdcc-linux-amd64/4.6.0/sdcc-4.6.0-amd64-unknown-linux2.5.tar.bz2/download"
+          tar -xjf sdcc.tar.bz2 --strip-components=1 -C $HOME/sdcc
+          
+          # Inject the new binaries directly into the GitHub Runner environment PATH
+          echo "$HOME/sdcc/bin" >> $GITHUB_PATH      - run: make -C Chroma_Tag_FW/OEPL BUILD=${{ matrix.build }}
       - name: Check flash and legacy OTA payload limit
         env:
           BUILD: ${{ matrix.build }}
