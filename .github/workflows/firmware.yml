@@ -36,7 +36,8 @@ jobs:
           tar -xjf sdcc.tar.bz2 --strip-components=1 -C $HOME/sdcc
           
           # Inject the new binaries directly into the GitHub Runner environment PATH
-          echo "$HOME/sdcc/bin" >> $GITHUB_PATH      - run: make -C Chroma_Tag_FW/OEPL BUILD=${{ matrix.build }}
+          echo "$HOME/sdcc/bin" >> $GITHUB_PATH
+      - run: make -C Chroma_Tag_FW/OEPL BUILD=${{ matrix.build }}
       - name: Check flash and legacy OTA payload limit
         env:
           BUILD: ${{ matrix.build }}
